@@ -19,7 +19,21 @@ if ($mysqli->connect_error) {
 
 # Query data yang ada pada database
 
-$sql = " SELECT * FROM daftar_karyawan";
+// pagination
+$jumlahDataPerHalaman = 5;
+// count data
+$keseluruhan = mysqli_query($mysqli, "SELECT * FROM daftar_karyawan");
+$jumlahKeseluruhan = mysqli_num_rows($keseluruhan);
+// 
+$jumlahHalaman = ceil($jumlahKeseluruhan / $jumlahDataPerHalaman);
+$halamanAktif = (isset($_GET["halaman"]) ) ? $_GET["halaman"] : 1;
+$awalData = ( $jumlahDataPerHalaman * $halamanAktif )- $jumlahDataPerHalaman;
+// 
+$jumlahTampil = mysqli_query($mysqli, "SELECT * FROM daftar_karyawan LIMIT $awalData, $jumlahDataPerHalaman");
+$jumlahData = mysqli_num_rows($jumlahTampil);
+//  
+
+$sql = "SELECT * FROM daftar_karyawan LIMIT $awalData, $jumlahDataPerHalaman";
 $result = $mysqli->query($sql);
 
 

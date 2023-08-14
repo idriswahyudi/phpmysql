@@ -6,6 +6,7 @@ if( !isset($_SESSION["login"] ) ){
 
 require 'functions.php';
 
+
 # Mengecek data berhasil ditambah atau tidak 
 if (isset($_POST["submit"])  ) {
 	if (newuser($_POST) > 0){
@@ -79,21 +80,18 @@ if (isset($_POST["deleteid"])  ) {
 	}
 }
 
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CRUD Manage Employees</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Manage Employees</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link href="assets/css/style.css" rel="stylesheet" />
@@ -110,8 +108,8 @@ if (isset($_POST["deleteid"])  ) {
 			</div>
 			<div class="col-xs-6">
 				<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
-				<a href="#deleteEmployeeModalAll" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
-				<a href="login/logout.php" class="btn btn-danger" data-toggle="modal"><i class="fa fa-sign-out" aria-hidden="true"></i> <span>Sign-Out</span></a>						
+				<a href="#deleteEmployeeModalAll" class="btn btn-danger" data-toggle="modal"><i class="fa fa-trash"></i> <span> Delete</span></a>
+				<a href="login/logout.php" class="btn btn-danger" data-toggle="modal"><i class="fa fa-sign-out"></i> <span>Sign-Out</span></a>						
 			</div>
 		</div>
 	</div>
@@ -142,8 +140,9 @@ if (isset($_POST["deleteid"])  ) {
 		<td><?php echo $rows['address'];?></td>
 		<td><?php echo $rows['phone'];?></td>
 		<td>	
-		<a href="" data-toggle="modal" data-target="#editEmployeeModal<?php echo $rows['id']; ?>" title ="Edit"><i class="material-icons">&#xE254;</i></a>
-		<a href="" data-toggle="modal" data-target="#deleteEmployeeModal<?php echo $rows['id']; ?>" title="Delete"><i class="material-icons" > &#xE872;</i></a>
+		<a href="" class="edit" data-target="#editEmployeeModal<?php echo $rows['id']; ?>" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+		<a href="" class="delete" data-target="#deleteEmployeeModal<?php echo $rows['id']; ?>" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+		</td>
 <!-- START Delete Modal HTML -->
 <div id="deleteEmployeeModal<?php echo $rows['id']; ?>" class="modal fade">
 		<div class="modal-dialog">
@@ -204,8 +203,6 @@ if (isset($_POST["deleteid"])  ) {
 	</form>	
 	<!-- END Edit Modal HTML -->
 
-
-
 			</td>
 		</tr>
 		<?php $i++; ?>
@@ -216,14 +213,16 @@ if (isset($_POST["deleteid"])  ) {
 <!-- Pagination -->
 
 <div class="clearfix">
-	<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+	<div class="hint-text">Showing <b><?= $jumlahData; ?></b> out of <b><?= $jumlahKeseluruhan; ?></b> entries</div>
 	<ul class="pagination">
-		<li class="page-item disabled"><a href="#">Previous</a></li>
-		<li class="page-item"><a href="#" class="page-link">1</a></li>
-		<li class="page-item"><a href="#" class="page-link">2</a></li>
-		<li class="page-item active"><a href="#" class="page-link">3</a></li>
-		<li class="page-item"><a href="#" class="page-link">4</a></li>
-		<li class="page-item"><a href="#" class="page-link">5</a></li>
+		<li class="page-item disabled"><a href="">Pages</a></li>
+		<?php for($i=1; $i <= $jumlahHalaman; $i++) : ?>
+			<?php if( $i == $halamanAktif) : ?>
+				<li class="page-item active"><a href="?halaman=<?= $i; ?>" class="page-link" ><?= $i; ?></a></li>
+					<?php else : ?>
+						<li class="page-item"><a href="?halaman=<?= $i; ?>" class="page-link" ><?= $i; ?></a></li>
+			<?php endif; ?>
+			<?php endfor; ?>
 		<li class="page-item"><a href="#" class="page-link">Next</a></li>
 	</ul>
 </div>
